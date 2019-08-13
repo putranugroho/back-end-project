@@ -2,7 +2,7 @@ const router = require('express').Router()
 const conn = require('../connection')
 
 // CREATE PRODUCT
-router.post('/products', (req, res) => {
+router.post('/addproducts', (req, res) => {
     const sql = `SELECT product_name FROM products WHERE product_name = '${req.body.product_name}'`
     const sql2 = `INSERT INTO products SET ?`
     const data = req.body
@@ -54,24 +54,24 @@ router.get('/products/:id', (req, res) => {
 // })
 
 // READ PRODUCTS BY CATEGORY
-router.get('/category', (req, res) => {
-    const sql = `SELECT * FROM products WHERE ?`
-    const data = req.query
-    console.log(data);
+// router.get('/category', (req, res) => {
+//     const sql = `SELECT * FROM products WHERE ?`
+//     const data = req.query
+//     console.log(data);
     
 
-    conn.query(sql, data, (err, result) => {
-        // Jika ada error dalam menjalankan query, akan dikirim errornya
-        if(err) return res.send(err)
+//     conn.query(sql, data, (err, result) => {
+//         // Jika ada error dalam menjalankan query, akan dikirim errornya
+//         if(err) return res.send(err)
 
-        res.send(result)
-    })
-})
+//         res.send(result)
+//     })
+// })
 
 // UPDATE PRODUCT BY ID
-router.patch('/products/:product', (req, res) => {
+router.patch('/products/:id', (req, res) => {
     const sql = `UPDATE products SET ?
-                WHERE id = ${req.params.productid}`
+                WHERE id = ${req.params.id}`
     const data = req.body
     
     conn.query(sql, data,  (err, result) => {
@@ -82,9 +82,9 @@ router.patch('/products/:product', (req, res) => {
 })
 
 // DELETE PRODUCT BY ID
-router.delete('/products/:productid', (req, res) => {
+router.delete('/products/:id', (req, res) => {
     const sql = `DELETE FROM products WHERE id = ?`
-    const data = req.params.productid
+    const data = req.params.id
 
     conn.query(sql, data,  (err, result) => {
         if(err) return res.send(err)

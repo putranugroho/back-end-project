@@ -2,22 +2,16 @@ const router = require('express').Router()
 const conn = require('../connection')
 
 // CREATE CART
-router.post('/cart', (req, res) => {
-    const sql = `INSERT INTO cart SET ?`
-    const sql2 = `SELECT * FROM cart WHERE id = ?`
-    const data = req.body
+router.post('/addcart', (req, res) => {
+    const sql = `INSERT INTO cart (products_id, users_id, qty)
+                VALUES ( '${req.body.products_id}', '${req.body.users_id}', '${req.body.qty}' )`
 
-    // INSERT
-    conn.query(sql, data, (err, result) => {
-        if(err) return res.send(err)
 
-        // SELECT
-        conn.query(sql2, result.insertId, (err, result2) => {
-            if(err) return res.send(err)
 
-            // SELECT memberikan result dalam bentuk array
-            res.send(result2[0])
-        })
+    conn.query(sql, (err,result) => {
+        if (err) return res.send(err)
+
+        res.send(result)
     })
 })
 

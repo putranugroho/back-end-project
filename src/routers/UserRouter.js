@@ -68,7 +68,7 @@ router.post('/users/input', (req, res) => {
 
     // tanda tanya akan di ganti oleh variabel data
     const sql = `INSERT INTO users SET ?`
-    const sql2 = `SELECT id, name, email, username, verified FROM users WHERE id = ?`
+    const sql2 = `SELECT id, f_name, l_name, email, username, verified FROM users WHERE id = ?`
     const data = req.body
 
     // Cek apakah email valid
