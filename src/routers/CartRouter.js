@@ -6,8 +6,6 @@ router.post('/addcart', (req, res) => {
     const sql = `INSERT INTO cart (products_id, users_id, qty)
                 VALUES ( '${req.body.products_id}', '${req.body.users_id}', '${req.body.qty}' )`
 
-
-
     conn.query(sql, (err,result) => {
         if (err) return res.send(err)
 

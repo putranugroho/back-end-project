@@ -54,19 +54,19 @@ router.get('/products/:id', (req, res) => {
 // })
 
 // READ PRODUCTS BY CATEGORY
-// router.get('/category', (req, res) => {
-//     const sql = `SELECT * FROM products WHERE ?`
-//     const data = req.query
-//     console.log(data);
+router.get('/productcategory', (req, res) => {
+    const sql = `SELECT * FROM products WHERE ?`
+    const data = req.query
     
 
-//     conn.query(sql, data, (err, result) => {
-//         // Jika ada error dalam menjalankan query, akan dikirim errornya
-//         if(err) return res.send(err)
+    conn.query(sql, data, (err, result) => {
+        // Jika ada error dalam menjalankan query, akan dikirim errornya
+        if(err) return res.send(err)
 
-//         res.send(result)
-//     })
-// })
+        res.send(result[0])
+    })
+})
+
 
 // UPDATE PRODUCT BY ID
 router.patch('/products/:id', (req, res) => {

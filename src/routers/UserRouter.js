@@ -5,13 +5,15 @@ const bcrypt = require('bcrypt')
 const path = require('path')
 const fs = require('fs')
 const multer = require('multer')
-const mailVerify = require('../email')
+// const mailVerify = require('../email')
 
 const port = require('../config')
 
 // __dirname: alamat folder file userRouter.js
 const rootdir = path.join(__dirname,'/../..')
-const photosdir = path.join(rootdir, '/upload/photos')
+const photosdir = path.join(rootdir, '/image')
+console.log(photosdir);
+
 
 const folder = multer.diskStorage(
     {
@@ -76,7 +78,7 @@ router.post('/users/input', (req, res) => {
         return res.send('Email is not valid')
     }
 
-    // Mengubah password dalam bentuk hash
+    // // Mengubah password dalam bentuk hash
     data.password = bcrypt.hashSync(data.password, 8)
 
     // Insert data
@@ -92,9 +94,9 @@ router.post('/users/input', (req, res) => {
                 return res.send(err)
             }
 
-            var user = result2[0]
+            // var user = result2[0]
             
-            mailVerify(user)
+            // mailVerify(user)
 
             res.send(result2)
         })
@@ -105,8 +107,8 @@ router.post('/users/input', (req, res) => {
 router.post('/users/avatar', upstore.single('avatar'), (req, res) => {
     const sql = `SELECT * FROM users WHERE username = ?`
     const sql2 = `UPDATE users SET avatar = '${req.file.filename}'
-                    WHERE username = '${req.body.uname}'`
-    const data = req.body.uname
+                    WHERE username = '${req.body.username}'`
+    const data = req.body.username
 
     conn.query(sql, data, (err, result) => {
         if(err) return res.send(err)
@@ -214,6 +216,18 @@ router.patch('/users/profile/:uname', (req, res) => {
             // Kirim usernya dalam bentuk object
             res.send(result[0])
         })
+    })
+})
+
+// DELETE USERS BY ID
+router.delete('/users/:id', (req, res) => {
+    const sql = `DELETE FROM users WHERE id = ?`
+    const data = req.params.id
+
+    conn.query(sql, data,  (err, result) => {
+        if(err) return res.send(err)
+
+        res.send(result)
     })
 })
 
