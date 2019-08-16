@@ -174,28 +174,17 @@ router.delete('/users/avatar', (req, res)=> {
 })
 
 // READ PROFILE
-router.get('/users/profile/:username', (req, res) => {
-    const sql = `SELECT username, name, email, avatar
-                FROM users WHERE username = ?`
-    const data = req.params.username
+router.get('/profile/:id', (req, res) => {
+    const sql = `SELECT * FROM users where id = ?`
+    const data = req.params.id
 
     conn.query(sql, data, (err, result) => {
-        // Jika ada error dalam menjalankan query, akan dikirim errornya
-        if(err) return res.send(err)
+        if(err) return res.send(err)    
 
-        const user = result[0]
-
-        // jika user tidak di temukan
-        if(!user) return res.send('User not found')
-
-        res.send({
-            username: user.username,
-            name : user.name,
-            email: user.email,
-            avatar: `https://mysqlputra.herokuapp.com/users/avatar/${user.avatar}`
-        })
+        res.send(result)
     })
 })
+
 
 // UPDATE PROFILE
 router.patch('/users/profile/:uname', (req, res) => {
