@@ -11,14 +11,13 @@ const port = require('../config')
 
 // __dirname: alamat folder file userRouter.js
 const rootdir = path.join(__dirname,'/../..')
-const photosdir = path.join(rootdir, '/image')
-console.log(photosdir);
+const photosuser = path.join(rootdir, '/image/users')
 
 
 const folder = multer.diskStorage(
     {
         destination: function (req, file, cb){
-            cb(null, photosdir)
+            cb(null, photosuser)
         },
         filename: function (req, file, cb){
             // Waktu upload, nama field, extension file
@@ -132,7 +131,7 @@ router.post('/users/avatar', upstore.single('avatar'), (req, res) => {
 router.get('/users/avatar/:imageName', (req, res) => {
     // Letak folder photo
     const options = {
-        root: photosdir
+        root: photosuser
     }
 
     // Filename / nama photo
@@ -157,7 +156,7 @@ router.delete('/users/avatar', (req, res)=> {
         const fileName = result[0].avatar
 
         // alamat file
-        const imgpath = photosdir + '/' + fileName
+        const imgpath = photosuser + '/' + fileName
 
         // delete image
         fs.unlink(imgpath, (err) => {
