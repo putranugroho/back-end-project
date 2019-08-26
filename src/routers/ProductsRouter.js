@@ -143,20 +143,9 @@ router.get('/products/:id', (req, res) => {
     conn.query(sql, data, (err, result) => {
         if(err) return res.send(err)    
 
-        res.send(result)
+        res.send(result[0])
     })
 })
-
-// router.get('/products/:stock', (req, res) => {
-//     const sql = `SELECT * FROM products where stock = ?`
-//     const data = req.params.stock
-
-//     conn.query(sql, data, (err, result) => {
-//         if(err) return res.send(err)    
-
-//         res.send(result)
-//     })
-// })
 
 // READ PRODUCTS BY CATEGORY
 router.get('/productcategory', (req, res) => {
@@ -172,13 +161,11 @@ router.get('/productcategory', (req, res) => {
     })
 })
 
-
 // UPDATE PRODUCT BY ID
 router.patch('/products/:id', (req, res) => {
     const sql = `UPDATE products SET ?
                 WHERE id = ${req.params.id}`
     const data = req.body
-    
     
     conn.query(sql, data,  (err, result) => {
         if(err) return res.send(err)

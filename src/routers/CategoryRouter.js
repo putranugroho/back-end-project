@@ -56,29 +56,4 @@ router.get('/categoryname', (req, res) => {
     })
 })
 
-// UPDATE PRODUCT BY ID
-// router.patch('/products/:product', (req, res) => {
-//     const sql = `UPDATE products SET ?
-//                 WHERE id = ${req.params.productid}`
-//     const data = req.body
-    
-//     conn.query(sql, data,  (err, result) => {
-//         if(err) return res.send(err)
-
-//         res.send(result)
-//     })
-// })
-
-// DELETE PRODUCT BY ID
-// router.delete('/products/:productid', (req, res) => {
-//     const sql = `DELETE FROM products WHERE id = ?`
-//     const data = req.params.productid
-
-//     conn.query(sql, data,  (err, result) => {
-//         if(err) return res.send(err)
-
-//         res.send(result)
-//     })
-// })
-
 module.exports = router
