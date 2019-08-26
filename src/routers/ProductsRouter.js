@@ -147,8 +147,8 @@ router.get('/products/:id', (req, res) => {
     })
 })
 
-// READ PRODUCTS BY CATEGORY
-router.get('/productcategory', (req, res) => {
+// READ PRODUCTS BY NAME
+router.get('/productname', (req, res) => {
     const sql = `SELECT * FROM products WHERE ?`
     const data = req.query
     
