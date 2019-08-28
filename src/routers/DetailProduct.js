@@ -14,6 +14,16 @@ router.post('/adddetail', (req, res) => {
 })
 
 // READ DETAIL
+router.get('/detail', (req, res) => {
+    const sql = `SELECT * FROM products_detail`
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
+    })
+})
+
 router.get('/detail/:id', (req, res) => {
     const sql = `SELECT * FROM products_detail where id = ?`
     const data = req.params.id
@@ -55,20 +65,6 @@ router.delete('/users/:id', (req, res) => {
         if(err) return res.send(err)
 
         res.send(result)
-    })
-})
-
-// READ PRODUCTS BY CATEGORY
-router.get('/categoryname', (req, res) => {
-    const sql = `SELECT id FROM category WHERE ?`
-    const data = req.query
-    
-
-    conn.query(sql, data, (err, result) => {
-        // Jika ada error dalam menjalankan query, akan dikirim errornya
-        if(err) return res.send(err)
-
-        res.send(result[0])
     })
 })
 

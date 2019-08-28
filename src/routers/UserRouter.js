@@ -104,10 +104,10 @@ router.post('/users/input', (req, res) => {
 
 // UPLOAD AVATAR
 router.post('/users/avatar', upstore.single('avatar'), (req, res) => {
-    const sql = `SELECT * FROM users WHERE username = ?`
+    const sql = `SELECT * FROM users WHERE id = ?`
     const sql2 = `UPDATE users SET avatar = '${req.file.filename}'
-                    WHERE username = '${req.body.username}'`
-    const data = req.body.username
+                    WHERE id = '${req.body.id}'`
+    const data = req.body.id
 
     conn.query(sql, data, (err, result) => {
         if(err) return res.send(err)
@@ -173,6 +173,17 @@ router.delete('/users/avatar', (req, res)=> {
 })
 
 // READ PROFILE
+router.get('/users', (req, res) => {
+    const sql = `SELECT * FROM users`
+    const data = req.params.id
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
+    })
+})
+
 router.get('/profile/:id', (req, res) => {
     const sql = `SELECT * FROM users where id = ?`
     const data = req.params.id
@@ -186,11 +197,11 @@ router.get('/profile/:id', (req, res) => {
 
 
 // UPDATE PROFILE
-router.patch('/users/profile/:uname', (req, res) => {
-    const sql = `UPDATE users SET ? WHERE username = ?`
+router.patch('/users/profile/:id', (req, res) => {
+    const sql = `UPDATE users SET ? WHERE id = ?`
     const sql2 = `SELECT username, name ,email 
-                    FROM users WHERE username = '${req.params.uname}'`
-    const data = [req.body, req.params.uname]
+                    FROM users WHERE id = '${req.params.id}'`
+    const data = [req.body, req.params.id]
 
     // UPDATE (Ubah data user di database)
     conn.query(sql, data, (err, result) => {

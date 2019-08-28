@@ -56,4 +56,29 @@ router.get('/categoryname', (req, res) => {
     })
 })
 
+// UPDATE CATEGORY BY ID
+router.patch('/category/:id', (req, res) => {
+    const sql = `UPDATE category SET ?
+                WHERE id = ${req.params.id}`
+    const data = req.body
+    
+    conn.query(sql, data,  (err, result) => {
+        if(err) return res.send(err)
+
+        res.send(result)
+    })
+})
+
+// DELETE CATEGORY BY ID
+router.delete('/category/:id', (req, res) => {
+    const sql = `DELETE FROM category WHERE id = ?`
+    const data = req.params.id
+
+    conn.query(sql, data,  (err, result) => {
+        if(err) return res.send(err)
+
+        res.send(result)
+    })
+})
+
 module.exports = router

@@ -13,10 +13,20 @@ router.post('/addcart', (req, res) => {
     })
 })
 
-// READ CART BY USER ID
+// READ CART
+router.get('/cart', (req, res) => {
+    const sql = `select * from cart;`
+
+    conn.query(sql,(err, result) => {
+        if(err) return res.send(err)
+
+        res.send(result)
+    })
+})
+
 router.get('/cart/:userid', (req, res) => {
-    const sql = `SELECT description, completed FROM cart
-                WHERE user_id = ?`
+    const sql = `SELECT * FROM cart
+                WHERE users_id = ?`
     const data = req.params.userid
 
     conn.query(sql, data, (err, result) => {
@@ -26,9 +36,20 @@ router.get('/cart/:userid', (req, res) => {
     })
 })
 
+router.get('/cart/:userid/:productid', (req, res) => {
+    const sql = `SELECT * FROM cart
+                WHERE users_id = "${req.params.userid}" AND products_id = "${req.params.productid}"`
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)
+
+        res.send(result)
+    })
+})
+
 // UPDATE CART BY CART ID
 router.patch('/cart/:cartid', (req, res) => {
-    const sql = `UPDATE cart SET completed = true
+    const sql = `UPDATE cart SET ?
                 WHERE id = ?`
     const data = req.params.cartid
 
