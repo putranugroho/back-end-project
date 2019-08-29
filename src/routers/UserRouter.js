@@ -175,7 +175,6 @@ router.delete('/users/avatar', (req, res)=> {
 // READ PROFILE
 router.get('/users', (req, res) => {
     const sql = `SELECT * FROM users`
-    const data = req.params.id
 
     conn.query(sql, (err, result) => {
         if(err) return res.send(err)    

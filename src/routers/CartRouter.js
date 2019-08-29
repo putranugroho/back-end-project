@@ -48,10 +48,10 @@ router.get('/cart/:userid/:productid', (req, res) => {
 })
 
 // UPDATE CART BY CART ID
-router.patch('/cart/:cartid', (req, res) => {
+router.patch('/cart/:id', (req, res) => {
     const sql = `UPDATE cart SET ?
-                WHERE id = ?`
-    const data = req.params.cartid
+                WHERE id = '${req.params.id}'`
+    const data = req.body
 
     conn.query(sql, data,  (err, result) => {
         if(err) return res.send(err)

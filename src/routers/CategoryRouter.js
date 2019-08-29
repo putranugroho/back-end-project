@@ -20,7 +20,7 @@ router.post('/addcategory', (req, res) => {
     })
 })
 
-// READ ALL PRODUCTS
+// READ ALL CATEGORY
 router.get('/category', (req, res) => {
     const sql = `SELECT * FROM category`
 
