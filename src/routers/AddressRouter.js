@@ -76,10 +76,9 @@ router.delete('/address/:id', (req, res) => {
 
 // SELECTED ADDRESS
 router.get('/select', (req, res) => {
-    const sql = `SELECT * FROM address WHERE ?`
-    const data = req.query
+    const sql = `SELECT id, user_id FROM address WHERE selected = 1`
 
-    conn.query(sql, data, (err, result) => {
+    conn.query(sql, (err, result) => {
         // Jika ada error dalam menjalankan query, akan dikirim errornya
         if(err) return res.send(err)
 
@@ -88,7 +87,7 @@ router.get('/select', (req, res) => {
 })
 
 // CHANGE ADDRESS
-router.get('/addressselected/:selectid/:changeid', (req, res) => {
+router.get('/addressselected/:changeid/:selectid', (req, res) => {
     const sql1 = `UPDATE address SET selected = 0 WHERE id = '${req.params.changeid}'`
     const sql2 = `UPDATE address SET selected = 1 WHERE id = '${req.params.selectid}'`
     
@@ -97,12 +96,25 @@ router.get('/addressselected/:selectid/:changeid', (req, res) => {
         if(err){
             return res.send(err.message)
         }   
-        conn.query(sql2, (err, result3) => {
+        conn.query(sql2, (err, result2) => {
             if(err){
                 return res.send(err.message)
             }
-            res.send(result3)
+            res.send(result2)
         })
+    })
+})
+
+router.get('/test/:id', (req, res) => {
+    const sql1 = `UPDATE address SET selected = 1 WHERE id = '${req.params.id}'`
+    
+    conn.query(sql1, (err, result1) => {
+        // Terdapat error ketika insert
+        if(err){
+            return res.send(err.message)
+        }  
+        
+        res.send(result1)
     })
 })
 

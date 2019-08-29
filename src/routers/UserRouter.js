@@ -194,6 +194,16 @@ router.get('/profile/:id', (req, res) => {
     })
 })
 
+router.get('/username/:username', (req, res) => {
+    const sql = `SELECT * FROM users where username = ?`
+    const data = req.params.username    
+
+    conn.query(sql, data, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
+    })
+})
 
 // UPDATE PROFILE
 router.patch('/users/profile/:id', (req, res) => {
