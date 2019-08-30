@@ -76,7 +76,7 @@ router.delete('/address/:id', (req, res) => {
 
 // SELECTED ADDRESS
 router.get('/select', (req, res) => {
-    const sql = `SELECT id, user_id FROM address WHERE selected = 1`
+    const sql = `SELECT id, users_id FROM address WHERE selected = 1`
 
     conn.query(sql, (err, result) => {
         // Jika ada error dalam menjalankan query, akan dikirim errornya

@@ -72,4 +72,15 @@ router.delete('/cart/:cartid', (req, res) => {
     })
 })
 
+router.delete('/hapuscart/:usersid', (req, res) => {
+    const sql = `DELETE FROM cart WHERE users_id = ?`
+    const data = req.params.usersid
+
+    conn.query(sql, data,  (err, result) => {
+        if(err) return res.send(err)
+
+        res.send(result)
+    })
+})
+
 module.exports = router
