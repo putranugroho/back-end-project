@@ -37,25 +37,14 @@ const upstore = multer(
 
 // UPLOAD AVATAR
 router.post('/checkout/receipt', upstore.single('image'), (req, res) => {
-    const sql = `SELECT * FROM checkout WHERE id = ?`
-    const sql2 = `UPDATE checkout SET order_receipt = '${req.file.filename}'
-                    WHERE id = '${req.body.id}'`
-    const data = req.body.id
+    const sql2 = `  UPDATE checkout SET order_receipt = '${req.file.filename}', order_status = 'Transaksi Dibayar' WHERE id = '${req.body.id}'`
 
-    conn.query(sql, data, (err, result) => {
+    conn.query(sql2, (err, result2) => {
         if(err) return res.send(err)
 
-        const user = result[0]
-
-        if(!user) return res.send('User not found')
-
-        conn.query(sql2, (err, result2) => {
-            if(err) return res.send(err)
-
-            res.send({
-                message: 'Upload berhasil',
-                filename: req.file.filename
-            })
+        res.send({
+            message: 'Upload berhasil',
+            filename: req.file.filename
         })
     })
 })
@@ -102,20 +91,108 @@ router.delete('/checkout/receipt', (req, res)=> {
                 res.send('Delete berhasil')
             })
         })
-    })
+    }) 
 })
 
+// ADD CHECKOUT
 router.post('/addcheckout', (req, res) => {
     const sql = `insert into checkout set ?`
     const sql2 = `select * from checkout where id = ?`
 
     conn.query(sql, req.body, (err, result) => {
-        if(err) return res.send("error tuch")
+        if(err) return res.send(err)
 
         conn.query(sql2, result.insertId, (err, result2) => {
-            if(err) return res.send("tuch error")
+            if(err) return res.send(err)
+
             res.send(result2)
         })
+    })
+})
+
+// GET CHECKOUT
+router.get('/checkout',(req, res)=>{
+    const sql = 'select * from checkout'
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)
+        
+        res.send(result)
+    })
+}
+)
+router.get('/checkout/:users_id',(req, res)=>{
+    const sql = 'select * from checkout where users_id = ? order by CREATED_AT DESC'
+    const data = req.params.users_id
+
+    conn.query(sql, data, (err, result) => {
+        if(err) return res.send(err)
+        
+        res.send(result)
+    })
+})
+
+// Update order status
+router.get('/confirmpayment/:id', (req, res) => {
+    const sql2 = `UPDATE checkout SET order_status = 'Transaksi Selesai' WHERE id = ?`
+    const sql3 = `select * from checkout where id = ?`
+
+        conn.query(sql2, req.params.id, (err, result2) => {
+            if(err) return res.send(err)
+            
+            conn.query(sql3, result2.insertId, (err, result3) => {
+                if(err) return res.send(err)
+                
+                res.send(result3)
+            })
+        })
+})
+
+router.get('/cancelpayment/:id', (req, res) => {
+    const sql2 = `UPDATE checkout SET order_status = 'Transaksi Dibatalkan' WHERE id = ?`
+    const sql3 = `select * from checkout where id = ?`
+
+        conn.query(sql2, req.params.id, (err, result2) => {
+            if(err) return res.send(err)
+            
+            conn.query(sql3, result2.insertId, (err, result3) => {
+                if(err) return res.send(err)
+                
+                res.send(result3)
+            })
+        })
+})
+
+// payment dibayar
+router.get('/paidpayment', (req, res) => {
+    const sql = `SELECT * FROM checkout where order_status = 'Transaksi Dibayar'`
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
+    })
+})
+
+//pending payment
+router.get('/pendingpayment', (req, res) => {
+    const sql = `SELECT * FROM checkout where order_status = 'Transaksi Pending'`
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
+    })
+})
+
+//check pending payment
+router.get('/pendingpayment/:users_id', (req, res) => {
+    const sql = `SELECT * FROM checkout where order_status = 'Transaksi Pending' AND ?`
+
+    conn.query(sql, req.params, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
     })
 })
 
@@ -136,6 +213,16 @@ router.post('/orderdetail', (req, res) => {
     conn.query(sql, (err, result) => {
         if(err) return res.send(err)
         
+        res.send(result)
+    })
+})
+
+router.get('/orderdetail', (req, res) => {
+    const sql = `select * from order_detail `
+
+    conn.query(sql, (err, result) => {
+        if(err) return res.send(err)
+
         res.send(result)
     })
 })
