@@ -67,15 +67,15 @@ router.get('/checkout/receipt/:imageName', (req, res) => {
 })
 
 // DELETE IMAGE
-router.delete('/checkout/receipt', (req, res)=> {
-    const sql = `SELECT * FROM checkout WHERE id = '${req.body.id}'`
-    const sql2 = `UPDATE checkout SET order_receipt = null WHERE id = '${req.body.id}'`
+router.delete('/checkout/receipt/:id', (req, res)=> {
+    const sql = `SELECT * FROM checkout WHERE id = '${req.params.id}'`
+    const sql2 = `UPDATE checkout SET order_receipt = null, order_status = 'Transaksi Ditolak' WHERE id = '${req.params.id}'`
 
     conn.query(sql, (err, result) => {
         if(err) return res.send(err)
 
         // nama file
-        const fileName = result[0].avatar
+        const fileName = result[0].order_receipt
 
         // alamat file
         const imgpath = photosorder + '/' + fileName
@@ -119,10 +119,21 @@ router.get('/checkout',(req, res)=>{
         
         res.send(result)
     })
-}
-)
+})
+
 router.get('/checkout/:users_id',(req, res)=>{
-    const sql = 'select * from checkout where users_id = ? order by CREATED_AT DESC'
+    const sql = 'select * from checkout where users_id = ?'
+    const data = req.params.users_id
+
+    conn.query(sql, data, (err, result) => {
+        if(err) return res.send(err)
+        
+        res.send(result)
+    })
+})
+
+router.post('/sortcheckout/:users_id',(req, res)=>{
+    const sql = `select * from checkout where users_id = ? ORDER BY ${req.body.order} ${req.body.urutan}`
     const data = req.params.users_id
 
     conn.query(sql, data, (err, result) => {
@@ -148,8 +159,8 @@ router.get('/confirmpayment/:id', (req, res) => {
         })
 })
 
-router.get('/cancelpayment/:id', (req, res) => {
-    const sql2 = `UPDATE checkout SET order_status = 'Transaksi Dibatalkan' WHERE id = ?`
+router.get('/cancelorder/:id', (req, res) => {
+    const sql2 = `UPDATE checkout SET order_status = 'Transaksi Ditolak' WHERE id = ?`
     const sql3 = `select * from checkout where id = ?`
 
         conn.query(sql2, req.params.id, (err, result2) => {
@@ -188,6 +199,16 @@ router.get('/pendingpayment', (req, res) => {
 //check pending payment
 router.get('/pendingpayment/:users_id', (req, res) => {
     const sql = `SELECT * FROM checkout where order_status = 'Transaksi Pending' AND ?`
+
+    conn.query(sql, req.params, (err, result) => {
+        if(err) return res.send(err)    
+
+        res.send(result)
+    })
+})
+//check cancel payment
+router.get('/cancelpayment/:users_id', (req, res) => {
+    const sql = `SELECT * FROM checkout where order_status = 'Transaksi Ditolak' AND ?`
 
     conn.query(sql, req.params, (err, result) => {
         if(err) return res.send(err)    
